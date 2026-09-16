@@ -1,81 +1,100 @@
 # The Unofficial Guide
 
-<!-- Replace this line with your name and which corpus you picked. -->
-
-> **This file is your submission.** Fill it in as you go — most sections get
-> written during the milestone that produces them, not at the end.
->
-> How the starter works, and every command you'll need, is in `RUNNING.md`.
-> Leave that file alone.
->
-> **Paste everything as text.** No screenshots, no video. A typed table gets
-> full credit; a picture of the same table gets none.
->
-> Delete these instruction blocks as you replace them. The `<!-- -->` comments
-> are notes to you and don't show up when the page renders — you can leave them
-> or remove them.
-
----
+Brittany - Advice Threads
 
 # Unit 1
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
-
-     Milestone 5. -->
+I chose the `advice_threads` corpus, which contains question-and-answer discussions about everyday college experiences. The system can answer questions about topics such as commuting, choosing classes or majors, studying, internships, roommates, campus clubs, and other parts of student life. Because each thread includes several replies with different perspectives, its answers may reflect practical advice and disagreement rather than a single official answer.
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** 800 characters
+**Overlap:** 120 characters
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+I used 800-character chunks because the advice threads average about 543 characters, so most short threads can stay together while longer discussions can still be split into manageable pieces. The threads contain replies of very uneven length, and useful advice can continue across a boundary, so I used a 120-character overlap to preserve some surrounding context between neighboring chunks. The indexing run produced 26 chunks averaging 487 characters, with the shorter average reflecting the many documents that did not need to fill a complete 800-character window.
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
-
-     Milestone 3. -->
 
 ## Sample Chunks
 
-<!-- Five chunks, pasted as text. Label each one and name the file it came from
-     AND the function that produced it — the grader checks your code against
-     what you claim here.
 
-     `python app.py chunks -n 5` prints all three for you. Copy them straight
-     across.
-
-     Milestone 3. -->
-
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `thread_bike_commute.txt#0` — produced by: `chunker.py::fallback_split`
 
 ```
+THREAD: Is a bike worth it for a 20 minute walk commute?
+
+--- reply 1 (14 votes) ---
+Yeah. Cuts an 18 minute walk to about 6. The thing nobody mentions is storage — covered bike parking exists at three buildings and is full by 9am at all three.
+
+--- reply 2 (9 votes) ---
+Counterpoint, I sold mine. Between November and March the paths are either icy or salted and saltdestroys a drivetrain in one season.
+
+--- reply 3 (22 votes) ---
+Both true. I keep a cheap bike for September to November and walk the rest of the year. Total cost was about $120 for the bike and I don't care what happens to it.
+
+--- reply 4 (5 votes) ---
+If you do get one, the campus does free registration and it's the only reason I got mine back after it was taken.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `thread_first_gen.txt#0` — produced by: `chunker.py::fallback_split`
 
 ```
+THREAD: Anything specific for first-generation students?
+
+--- reply 1 (33 votes) ---
+The advising office has a specific programme and it is genuinely good, but it is opt-in and badlypublicised. Ask for it by name.
+
+--- reply 2 (41 votes) ---
+The thing I'd say: the unwritten rules are the hard part, not the coursework. Ask about the unwritten rules explicitly. People are happy to explain them and nobody volunteers them.
+
+--- reply 3 (16 votes) ---
+Emergency fund for textbooks and travel exists and is not means-tested beyond a short form.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `thread_laptop_specs.txt#0` — produced by: `chunker.py::fallback_split`
 
 ```
+THREAD: How much laptop do I actually need for CS courses?
+
+--- reply 1 (31 votes) ---
+Less than the recommended spec page says. 16GB of RAM is the one number worth paying for; everything else you'll never notice.
+
+--- reply 2 (18 votes) ---
+Adding: the lab machines exist and are better than anything you'll buy. For the heavy assignmentspeople just use those.
+
+--- reply 3 (12 votes) ---
+I did two years on an 8GB machine and it was fine until the last project, at which point it very much wasn't. 16 is the answer.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `thread_office_hours_etiquette.txt#0` — produced by: `chunker.py::fallback_split`
 
 ```
+THREAD: Is it weird to go to office hours with no specific question?
+
+--- reply 1 (44 votes) ---
+No, and this is the single most common thing first years get wrong. 'I'm following the lectures but I don't feel like I understand the shape of it' is a completely normal thing to say.
+
+--- reply 2 (29 votes) ---
+They're usually empty. You are doing the instructor a favour by turning up.
+
+--- reply 3 (18 votes) ---
+If it helps, treat it as a standing appointment. Go every week for a month and it stops feeling like a thing.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `thread_roommate_conflict.txt#0` — produced by: `chunker.py::fallback_split`
 
 ```
+THREAD: Roommate situation isn't working. What now?
+
+--- reply 1 (28 votes) ---
+Talk to your RA early, and frame it as 'we need help sorting this out' rather than 'move me'. Room changes are possible but the process starts with mediation and skipping that step slows it down.
+
+--- reply 2 (14 votes) ---
+Room changes happen at the semester boundary almost always, and mid-semester only in fairly serious cases.
+
+--- reply 3 (33 votes) ---
+Write down specifics before the meeting. 'It's not working' is hard to act on; 'guests four nights a week past 2am' is not.
 ```
 
 ## Sample Answer
