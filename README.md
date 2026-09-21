@@ -135,18 +135,24 @@ should allow relevant advice questions through while refusing unrelated ones.
 
 ## How I Used AI
 
-<!-- Two specific moments. For each: what you asked for, what came back, and
-     what you changed about it.
+**1.** I asked AI to help write the `split_documents()` chunking function for
+the `advice_threads` corpus using 800-character chunks and 120-character
+overlap. It suggested a fixed-size sliding-window implementation, which fit
+the uneven length of the threads and preserved context across chunk
+boundaries. I checked the result by running the chunk command and confirmed it
+produced 26 chunks averaging 487 characters, then made sure the chunks were
+labeled as produced by `chunker.py::split_documents` so the README matched the
+actual function.
 
-     "I asked Claude to write the chunking function from my notes. It ignored
-     the overlap, so I added that myself" is the level of detail we're after.
-     "I used AI to help me code" is not.
-
-     Milestone 5. -->
-
-**1.**
-
-**2.**
+**2.** I asked AI to pressure-test my five acceptance criteria and look for
+targets that were too vague or difficult to measure. It pointed out that goals
+such as “retrieval works” needed specific counts or thresholds, so I kept the
+retrieval criterion at 4 of 5 questions, required every answer to name a
+source, and added measurable targets for retrieving no more than three chunks
+above a 0.70 similarity score and answering at least 4 of 5 questions in three
+sentences or fewer. I also added explanations for why each target fit the
+advice-thread corpus instead of choosing numbers without connecting them to
+the system.
 
 
 
