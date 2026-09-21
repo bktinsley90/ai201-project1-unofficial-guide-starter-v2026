@@ -19,7 +19,7 @@ I used 800-character chunks because the advice threads average about 543 charact
 ## Sample Chunks
 
 
-**Chunk 1** — source: `thread_bike_commute.txt#0` — produced by: `chunker.py::fallback_split`
+**Chunk 1** — source: `thread_bike_commute.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
 THREAD: Is a bike worth it for a 20 minute walk commute?
@@ -37,7 +37,7 @@ Both true. I keep a cheap bike for September to November and walk the rest of th
 If you do get one, the campus does free registration and it's the only reason I got mine back after it was taken.
 ```
 
-**Chunk 2** — source: `thread_first_gen.txt#0` — produced by: `chunker.py::fallback_split`
+**Chunk 2** — source: `thread_first_gen.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
 THREAD: Anything specific for first-generation students?
@@ -52,7 +52,7 @@ The thing I'd say: the unwritten rules are the hard part, not the coursework. As
 Emergency fund for textbooks and travel exists and is not means-tested beyond a short form.
 ```
 
-**Chunk 3** — source: `thread_laptop_specs.txt#0` — produced by: `chunker.py::fallback_split`
+**Chunk 3** — source: `thread_laptop_specs.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
 THREAD: How much laptop do I actually need for CS courses?
@@ -67,7 +67,7 @@ Adding: the lab machines exist and are better than anything you'll buy. For the 
 I did two years on an 8GB machine and it was fine until the last project, at which point it very much wasn't. 16 is the answer.
 ```
 
-**Chunk 4** — source: `thread_office_hours_etiquette.txt#0` — produced by: `chunker.py::fallback_split`
+**Chunk 4** — source: `thread_office_hours_etiquette.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
 THREAD: Is it weird to go to office hours with no specific question?
@@ -82,7 +82,7 @@ They're usually empty. You are doing the instructor a favour by turning up.
 If it helps, treat it as a standing appointment. Go every week for a month and it stops feeling like a thing.
 ```
 
-**Chunk 5** — source: `thread_roommate_conflict.txt#0` — produced by: `chunker.py::fallback_split`
+**Chunk 5** — source: `thread_roommate_conflict.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
 THREAD: Roommate situation isn't working. What now?
@@ -99,30 +99,39 @@ Write down specifics before the meeting. 'It's not working' is hard to act on; '
 
 ## Sample Answer
 
-<!-- One complete question and answer, pasted as text, with the source line
-     visible. Milestone 4. -->
+**Question:** How much laptop do I actually need for CS courses?
 
-**Question:**
-
-**Answer:**
+**Answer:** According to `thread_laptop_specs.txt`, you need 16GB of RAM,
+which is described as the one number worth paying for. The document also notes
+that you need less than what the recommended spec page says, as you will never
+notice the other specifications.
 
 ```
+Source: thread_laptop_specs.txt
 ```
 
 **My relevance cutoff:**
 
-<!-- The number you set in config.py, and how you got there.
+I set the relevance cutoff to **0.60** in `config.py`. The five in-corpus
+questions had best distances from 0.202 to 0.402, while the five out-of-scope
+questions ranged from 0.787 to 0.930. This leaves a clear gap between the
+closest out-of-scope question and the least similar in-corpus question, so 0.60
+should allow relevant advice questions through while refusing unrelated ones.
 
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
 
-     Milestone 4. -->
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| Is a bike worth it for a 20 minute walk commute, and what should I do if I get one? | Yes | 0.283 |
+| What specific support or advice is available for first-generation students? | Yes | 0.402 |
+| How much laptop do I actually need for CS courses? | Yes | 0.202 |
+| Is it weird to go to office hours with no specific question? | Yes | 0.384 |
+| What should I do if my roommate situation is not working? | Yes | 0.354 |
+| What is the capital of Mongolia? | No | 0.890 |
+| How do I change the oil in a diesel engine? | No | 0.930 |
+| Who won the 1994 World Cup? | No | 0.787 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.828 |
+| How do I write a for loop in Rust? | No | 0.871 |
 
 ## How I Used AI
 
@@ -139,10 +148,7 @@ Write down specifics before the meeting. 'It's not working' is hard to act on; '
 
 **2.**
 
-<!-- ── Stretch features ─────────────────────────────────────────────────────
-     Doing one? Say so here BEFORE you start. A feature this README never
-     claims earns nothing.
-     ───────────────────────────────────────────────────────────────────────── -->
+
 
 ---
 
