@@ -259,12 +259,13 @@ condition was met.
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** I lowered `TOP_K` in `config.py` from 5 to 3, so retrieval
+returns at most three chunks per question.
 
-**Why I picked it:**
+**Why I picked it:** The criterion 4 diagnosis traced that miss to retrieval
+returning five chunks per question (`TOP_K = 5`), so capping retrieval at three
+directly targets the "no more than 3 chunks" part of the target.
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
 
 ### Run Log — After
 
@@ -273,11 +274,17 @@ condition was met.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+Aggregated from `results/run_2026-10-04_1700_after.md` (top-k 3, cutoff 0.6),
+the same way the before table used one result file. For criterion 4, similarity
+is taken as 1 − distance, since the log records only the best distance.
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Retrieved chunk contains the answer | 4 of 5 | 3 of 5 | 4 of 5 | 3 of 5 | MISSED |
+| 2. Every answer names a source | 5 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 4. Retrieve no more than 3 chunks, all above 0.70 similarity | 5 of 5 | at most 2 of 5 | at most 2 of 5 | at most 2 of 5 | MISSED |
+| 5. Answer accurately in 3 sentences or fewer | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
 
 **Did it help?**
 
