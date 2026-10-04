@@ -160,21 +160,7 @@ the system.
 
 # Unit 2
 
-<!-- These sections get ADDED to what's already above. Don't delete or rewrite
-     unit 1 — the point is that someone can see what you said before you knew
-     how it went. -->
-
 ## Run Log — Before
-
-<!-- Your five criteria, three runs each. `python run_eval.py --label before`
-     runs the questions, puts the OUT_OF_SCOPE ones through the gate, and
-     writes it all into results/ for you. Targets come from criteria.md; the
-     verdict column is your call.
-
-     Criterion 3 is measured in one deterministic pass rather than three, so
-     the same number goes in all three run columns. That's correct, not lazy.
-
-     Milestone 1. -->
 
 Aggregated from `results/run_2026-10-04_1625_before.md`.
 
@@ -240,11 +226,11 @@ Source: thread_roommate_conflict.txt
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunks contain the answer | MISSED | The runs retrieved an answer-containing chunk for 2 of 5, 2 of 5, and 4 of 5 questions; the target was 4 of 5 in every run. |
+| 2 | Every answer names a source | MET | All 15 generated answers across the three runs identify at least one source document. |
+| 3 | Gate stops out-of-corpus questions | MET | The relevance gate refused all 5 out-of-corpus questions, exceeding the target of at least 4 of 5. |
+| 4 | Retrieve no more than 3 chunks, all above 0.70 similarity | MISSED | The run retrieved 5 chunks per question (top-k is 5), exceeding the maximum of 3; the logged best values are distances, not similarity scores. |
+| 5 | Answer accurately in 3 sentences or fewer | MET | Each run has at least 4 of 5 answers that preserve the key details and fit within 3 sentences; all 5 do in the sampled run. |
 
 ## Diagnoses
 
