@@ -176,17 +176,56 @@ the system.
 
      Milestone 1. -->
 
+Aggregated from `results/run_2026-10-04_1625_before.md`.
+
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 2 of 5 | 2 of 5 | 4 of 5 | MISSED |
+| 2. Every answer names a source | 5 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 4. Retrieve no more than 3 chunks, all above 0.70 similarity | 5 of 5 | 0 of 5 | 0 of 5 | 0 of 5 | MISSED |
+| 5. Answer accurately in 3 sentences or fewer | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
 
-<!-- Underneath, paste the REAL output for each criterion from one of your
-     runs — the actual text your system produced, not a description of it.
-     Name the file and function that produced it. -->
+### Real output supporting the criteria
+
+The excerpts below are copied from
+`results/run_2026-10-04_1625_before.md`.
+
+**Criterion 1 — retrieved answer check** (`run_eval.py::main`, Run 1):
+
+```
+| Is it weird to go to office hours with no specific question? | fail | fail | fail |
+```
+
+**Criterion 2 — answer names a source** (`run_eval.py::main`, laptop question, Run 3):
+
+```
+According to the documents, you need 16GB of RAM, which is the one number worth paying for, while everything else you will never notice (thread_laptop_specs.txt). Additionally, lab machines exist and are better than anything you will buy for heavy assignments (thread_laptop_specs.txt).
+
+Source: thread_laptop_specs.txt
+```
+
+**Criterion 3 — out-of-corpus gate** (`run_eval.py::check_out_of_scope`):
+
+```
+Produced by `run_eval.py::check_out_of_scope`, cutoff 0.6. Refused 5 of 5.
+```
+
+**Criterion 4 — retrieved chunk count and distance** (`run_eval.py::main`, Run 1):
+
+```
+- top-k: 5 · relevance cutoff: 0.6
+- Best distance: 0.2829 (passed the gate)
+- Sources retrieved: thread_bike_commute.txt, thread_commuting.txt, thread_parking.txt, thread_study_spots.txt, thread_winter_advice.txt
+```
+
+**Criterion 5 — concise answer** (`run_eval.py::main`, roommate question, Run 3):
+
+```
+Based on the documents, you should talk to your RA early and frame the conversation as needing help sorting things out rather than asking to move, since the process starts with mediation (thread_roommate_conflict.txt). Additionally, you should write down specific details before the meeting rather than just saying it is not working (thread_roommate_conflict.txt).
+
+Source: thread_roommate_conflict.txt
+```
 
 ## Verdicts
 
