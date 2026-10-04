@@ -268,10 +268,6 @@ directly targets the "no more than 3 chunks" part of the target.
 
 
 ### Run Log — After
-
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
-
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
 Aggregated from `results/run_2026-10-04_1700_after.md` (top-k 3, cutoff 0.6),
@@ -288,12 +284,27 @@ is taken as 1 − distance, since the log records only the best distance.
 
 **Did it help?**
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
+Partly. It fixed one half of criterion 4 and did not change any verdict.
 
-     Milestone 4. -->
+- **What it fixed:** Retrieval now returns 3 chunks per question instead of 5
+  (`top-k: 3` in the after logs), so the "no more than 3 chunks" half of
+  criterion 4 now holds.
+- **What it did not fix:** Criterion 4 is still MISSED. Reading similarity as
+  1 − distance, only the bike (0.717) and laptop (0.798) questions have a best
+  chunk above 0.70, and the other three do not. Cutting `top-k` can only remove
+  weaker chunks; it cannot raise the quality of the best one.
+- **What got worse or stayed unstable:** The roommate question is the weak
+  spot. It scored 1 of 3 in both before files, but across my three after files
+  it scored 0 of 3, 2 of 3, and 1 of 3. The retrieved sources still include
+  `thread_roommate_conflict.txt` every time, so the misses come from answers
+  that leave out the word "mediation" (generation), not from the chunk being
+  dropped. Office hours still fails 3 of 3, as before.
+- **Overall:** Criterion 1 went from 2, 2, 4 to 3, 4, 3 and is still MISSED
+  because the target must hold in every run. I can't show that the change
+  broke anything. The variation between runs is as large as any difference
+  between before and after, so the honest conclusion is that `top-k` only
+  helped the chunk-count half of criterion 4.
+
 
 ## What's Still Broken
 
@@ -305,9 +316,44 @@ is taken as 1 − distance, since the log records only the best distance.
 
      Milestone 5. -->
 
+**Criterion 1 — still MISSED (3, 4, 3 of 5 against a target of 4 in every run).**
+The office-hours question fails in all three runs, and roommate fails in some.
+In both cases `thread_office_hours_etiquette.txt` and
+`thread_roommate_conflict.txt` are retrieved, so the next step is generation:
+tighten the grounding prompt in `generate.py` so answers include every
+distinct piece of advice from the retrieved thread (for example the
+"standing appointment" reply and the mediation step). I'd also check the
+`expects` phrases for those two questions, because they test a single detail
+rather than the main answer. I stopped after one change because this unit asks
+for one, and a prompt change would have been a second variable in the same
+before/after comparison.
+
+**Criterion 4 — still MISSED (at most 2 of 5 in every run).** Retrieval now
+returns 3 chunks, but only the bike and laptop questions have a best chunk
+above 0.70 similarity. The other three questions' best chunks sit at distances
+of 0.35 to 0.40, so a better score would need better embeddings or chunks, such
+as splitting each thread by reply, not a smaller `top-k`. Since the gate
+cutoff is 0.60 distance, it would also let in chunks well below this
+criterion's bar. I did not tackle it because its target and the gate disagree
+(see below), and I'd rather fix the target than tune the system to reach it.
+
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
+**Criterion 4 is the one I'd rewrite.** I wrote "similarity above 0.70", but
+the system reports distances and gates at 0.60 distance, so the criterion used
+a different scale from everything else and I had to convert it to evaluate
+it. I'd restate it as a distance (for example, every retrieved chunk under
+0.45) and set it against the gap I measured between in-corpus and out-of-scope
+questions. I'd also split it, because "at most 3 chunks" and "chunk quality"
+are two separate checks.
 
-     Milestone 5. -->
+**Criterion 1 is the second.** It says the retrieved chunks contain the
+answer, but `scorer.py` checks the generated answer for a phrase, so it
+cannot tell a retrieval miss from a generation miss. I'd write it to check the
+retrieved chunk text for the expected phrase, and add a separate criterion for
+the answer.
+
+**Criterion 2 is too easy to meet.** The prompt already tells the model to
+name the source, and it passed 15 of 15 in both before and after runs. I'd
+tighten it to require that the named source is the thread that actually
+contains the answer.
