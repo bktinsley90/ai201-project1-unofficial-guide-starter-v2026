@@ -234,23 +234,28 @@ Source: thread_roommate_conflict.txt
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
+### Criterion 1 — Retrieved chunks contain the answer
 
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
+The available evidence does not establish that retrieval failed. The run log
+lists `thread_bike_commute.txt` and `thread_office_hours_etiquette.txt` among
+the five retrieved sources for those questions, and both source documents
+contain the expected facts. The evaluation's `scorer.py::judge` checks the
+generated answer text for the `expects` phrase; it does not inspect the
+retrieved chunks. The bike answers describe free registration using different
+wording, while the office-hours answers do not mention the expected “standing
+appointment” detail. The best-supported pipeline issue is generation omitting
+that office-hours detail, alongside a measurement mismatch: these pass/fail
+counts cannot by themselves tell whether an answer-containing chunk was
+retrieved.
 
-     The five stages: loading → chunking → embedding → retrieval → generation.
+### Criterion 4 — No more than 3 chunks, all above 0.70 similarity
 
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
+This miss is at **retrieval**: `config.py` sets `TOP_K = 5`, and the run log
+confirms `top-k: 5`, so the system retrieves five chunks per question instead
+of meeting the maximum of three. The run log reports best *distances* (where
+lower is better), not the individual similarity scores for every retrieved
+chunk, so this evidence cannot establish whether the separate 0.70 score
+condition was met.
 
 ## The Improvement
 
